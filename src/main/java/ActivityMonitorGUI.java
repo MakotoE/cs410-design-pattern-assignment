@@ -1,3 +1,7 @@
+import libs.CpuUtilizationSensor;
+import libs.DeskUsageSensor;
+import libs.MemoryUsageSensor;
+
 import java.awt.*;
 import java.text.DecimalFormat;
 import javax.swing.*;
@@ -9,7 +13,11 @@ public class ActivityMonitorGUI {
 		frame.setTitle("Activity Monitor Tracker");
 		frame.setLayout(new GridLayout(3, 1));
 
-		var activityMonitor = new ActivityMonitor();
+		var activityMonitor = new ActivityMonitor(
+			new CpuUtilizationSensor(),
+			new DeskUsageSensor(),
+			new MemoryUsageSensor()
+		);
 
 		frame.setPreferredSize(new Dimension(600, 600));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,6 +30,10 @@ public class ActivityMonitorGUI {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * @param value Value returned from sensor
+	 * @return Panel for a single sensor reading
+	 */
 	public static JPanel newPanel(ActivityMonitor.Value value) {
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(value.alertName()));

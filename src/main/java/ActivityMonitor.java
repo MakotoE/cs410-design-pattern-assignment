@@ -3,16 +3,25 @@ import libs.DeskUsageSensor;
 import libs.MemoryUsageSensor;
 import java.awt.*;
 
+/**
+ * Adapter for sensor.
+ */
 public class ActivityMonitor {
+	/**
+	 * Sensor output.
+	 */
 	public static abstract class Value {
-		double value;
-		Color color;
+		public double value;
+		public Color color;
 
 		public Value(double value, Color color) {
 			this.value = value;
 			this.color = color;
 		}
 
+		/**
+		 * @return "CRITICAL", "DANGER", or "OK"
+		 */
 		public String alertText() {
 			if (color == Color.RED) {
 				return "CRITICAL";
@@ -26,6 +35,9 @@ public class ActivityMonitor {
 			}
 		}
 
+		/**
+		 * @return Type of sensor
+		 */
 		public abstract String alertName();
 
 		/**
@@ -86,10 +98,14 @@ public class ActivityMonitor {
 	private final DeskUsageSensor deskSensor;
 	private final MemoryUsageSensor memorySensor;
 
-	public ActivityMonitor() {
-		this.cpuSensor = new CpuUtilizationSensor();
-		this.deskSensor = new DeskUsageSensor();
-		this.memorySensor = new MemoryUsageSensor();
+	public ActivityMonitor(
+		CpuUtilizationSensor cpuSensor,
+		DeskUsageSensor deskSensor,
+		MemoryUsageSensor memorySensor
+	) {
+		this.cpuSensor = cpuSensor;
+		this.deskSensor = deskSensor;
+		this.memorySensor = memorySensor;
 	}
 
 	public CPUValue cpuValue() {
