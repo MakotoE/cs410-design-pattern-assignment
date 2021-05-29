@@ -1,21 +1,84 @@
 import libs.CpuUtilizationSensor;
 import libs.DeskUsageSensor;
 import libs.MemoryUsageSensor;
+import java.awt.*;
 
 public class ActivityMonitor {
-	public enum Color {
-		Red,
-		Yellow,
-		Green,
+	public static abstract class Value {
+		double value;
+		Color color;
+
+		public Value(double value, Color color) {
+			this.value = value;
+			this.color = color;
+		}
+
+		public String alertText() {
+			if (color == Color.RED) {
+				return "CRITICAL";
+			} else if (color == Color.YELLOW) {
+				return "DANGER";
+			} else if (color == Color.GREEN) {
+				return "OK";
+			} else {
+				assert false;
+				return "";
+			}
+		}
+
+		public abstract String alertName();
+
+		/**
+		 * @return 0 at 0 utilization and 1 at full utilization
+		 */
+		public abstract double ratio();
 	}
 
-	public static class Value {
-		Color color;
-		double value;
+	public static class CPUValue extends Value {
+		public CPUValue(double value, Color color) {
+			super(value, color);
+		}
 
-		public Value(Color color, double value) {
-			this.color = color;
-			this.value = value;
+		@Override
+		public String alertName() {
+			return "CPU Utilization Alert";
+		}
+
+		@Override
+		public double ratio() {
+			return this.value / 90;
+		}
+	}
+
+	public static class DeskValue extends Value {
+		public DeskValue(double value, Color color) {
+			super(value, color);
+		}
+
+		@Override
+		public String alertName() {
+			return "Desk Usage Alert";
+		}
+
+		@Override
+		public double ratio() {
+			return this.value / 900;
+		}
+	}
+
+	public static class MemoryValue extends Value {
+		public MemoryValue(double value, Color color) {
+			super(value, color);
+		}
+
+		@Override
+		public String alertName() {
+			return "Memory Usage Alert";
+		}
+
+		@Override
+		public double ratio() {
+			return this.value / 13;
 		}
 	}
 
@@ -29,24 +92,24 @@ public class ActivityMonitor {
 		this.memorySensor = new MemoryUsageSensor();
 	}
 
-	public Value cpuValue() {
-		return new Value(strToColor(cpuSensor.getReport()), cpuSensor.readValue());
+	public CPUValue cpuValue() {
+		return new CPUValue(cpuSensor.readValue(), strToColor(cpuSensor.getReport()));
 	}
 
-	public Value deskValue() {
-		return new Value(strToColor(deskSensor.getReport()), deskSensor.readValue());
+	public DeskValue deskValue() {
+		return new DeskValue(deskSensor.readValue(), strToColor(deskSensor.getReport()));
 	}
 
-	public Value memoryValue() {
-		return new Value(strToColor(memorySensor.getReport()), memorySensor.readValue());
+	public MemoryValue memoryValue() {
+		return new MemoryValue(memorySensor.readValue(), strToColor(memorySensor.getReport()));
 	}
 
 	private Color strToColor(String s) {
 		return switch (s) {
-			case "Critical" -> Color.Red;
-			case "Danger" -> Color.Yellow;
-			case "OK" -> Color.Green;
-			default -> throw new IllegalArgumentException("Unexpected value: " + s);
+			case "CRITICAL" -> Color.RED;
+			case "DANGER" -> Color.YELLOW;
+			case "OK" -> Color.GREEN;
+			default -> throw new IllegalArgumentException(s);
 		};
 	}
 }
