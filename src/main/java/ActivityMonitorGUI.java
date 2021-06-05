@@ -46,7 +46,7 @@ public class ActivityMonitorGUI {
 		panel.add(emptySpace0);
 
 		var color = new JPanel();
-		color.setMaximumSize(new Dimension((int) (value.ratio() * 180) + 20, 50));
+		color.setMaximumSize(new Dimension((int) (value.ratio() * 300) + 5, 50));
 		color.setBackground(value.color);
 		color.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.add(color);

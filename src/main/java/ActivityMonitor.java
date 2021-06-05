@@ -58,7 +58,7 @@ public class ActivityMonitor {
 
 		@Override
 		public double ratio() {
-			return this.value / 90;
+			return Math.min(this.value / 90, 1);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class ActivityMonitor {
 
 		@Override
 		public double ratio() {
-			return this.value / 900;
+			return Math.min(this.value / 900, 1);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class ActivityMonitor {
 
 		@Override
 		public double ratio() {
-			return this.value / 13;
+			return Math.min(this.value / 13, 1);
 		}
 	}
 
